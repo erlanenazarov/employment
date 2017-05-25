@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  font-family: arial, sans-serif;
+}
+
+.modal_fade {
+  width: 960px;
+  margin: 0 auto;
+
+}
+h1 {
+  font-size: 60px;
+}
