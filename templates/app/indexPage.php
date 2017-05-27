@@ -12,6 +12,7 @@
     <link href="/public/css/animate.min.css" rel="stylesheet" media="screen">
     <link href="/public/css/owl.theme.css" rel="stylesheet">
     <link href="/public/css/owl.carousel.css" rel="stylesheet">
+    <link href="/public/css/jquery.ui.css" rel="stylesheet" type="text/css">
 
     <!-- Colors -->
     <link href="/public/css/css-index.css" rel="stylesheet" media="screen">
@@ -28,7 +29,6 @@
 </head>
 
 <body data-spy="scroll" data-target="#navbar-scroll">
-
 <!-- /.preloader -->
 <div id="preloader"></div>
 <div id="top"></div>
@@ -43,7 +43,7 @@
                 <div class="col-md-7">
 
                     <!-- /.logo -->
-                    <div class="logo fadeInDown" >
+                    <div class="logo fadeInDown">
                         <a href=""><img src="/public/images/logo.jpg" alt="logo"></a>
                     </div>
 
@@ -53,12 +53,12 @@
                     </h1>
 
                     <!-- /.header paragraph -->
-                    <div class="landing-text fadeInUp" >
+                    <div class="landing-text fadeInUp">
                         <p>Мы находим, Вы выбираете!</p>
                     </div>
 
                     <!-- /.header button -->
-                    <div class="head-btn fadeInLeft" >
+                    <div class="head-btn fadeInLeft">
                         <a href="#feature" class="btn-primary">Соискателям</a>
                         <a href="#download" class="btn-default">Работодателям</a>
                     </div>
@@ -69,28 +69,51 @@
                 <!-- /.signup form -->
                 <div class="col-md-5">
 
-                    <div class="signup-header fadeInUp" >
-                        <h3 class="form-title text-center">ВХОД</h3>
+                    <div class="signup-header fadeInUp">
+                        <?php if(!Security::getInstance()->isAuth()): ?>
+                            <h3 class="form-title text-center">ВХОД</h3>
 
-                        <form class="form-header" action="/authentication/login"
-                              role="form" method="POST" id="#">
-                            <input type="hidden" name="u" value="503bdae81fde8612ff4944435">
-                            <input type="hidden" name="id" value="bfdba52708">
+                            <form class="form-header" action="/authentication/login"
+                                  role="form" method="POST" id="login-form">
+                                <input type="hidden" name="u" value="503bdae81fde8612ff4944435">
+                                <input type="hidden" name="id" value="bfdba52708">
 
-                            <div class="form-group">
-                                <input class="form-control input-lg" name="login" type="text"
-                                       placeholder="Логин" required>
+                                <div class="form-group">
+                                    <input class="form-control input-lg" name="login" type="text"
+                                           placeholder="Логин" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control input-lg" name="password" type="password"
+                                           placeholder="Пароль" required>
+                                </div>
+                                <div class="form-group last">
+                                    <input type="submit" class="btn btn-warning btn-block btn-lg" value="Войти">
+                                </div>
+                                <p class="privacy text-center">У Вас нет учетной записи? <a href="#" data-toggle="modal"
+                                                                                            data-target="#register-modal">
+                                        Зарегистрироваться</a>.</p>
+                            </form>
+                        <?php else: ?>
+                            <h3 class="form-title text-center">Добро пожаловать, <?php echo(Security::getInstance()->getUser()['login']); ?></h3>
+                            <div class="row">
+                                <div class="col-md-4"><a href="/authentication/logout" class="btn btn-primary" style="margin-top: 9px;">Выйти</a></div>
+                                <div class="col-md-8">
+                                    <?php if($data['need_to_fill_data']): ?>
+                                        <?php if(Security::getInstance()->getUser()['role'] == 'employee') { ?>
+                                            <p onclick="registerAsEmployee(null);" style="cursor: pointer;">Продолжить регистрацию как соискатель.</p>
+                                        <?php } else { ?>
+                                            <p onclick="registerAsEmployer(null);" style="cursor: pointer;">Продолжить регистрацию как работодатель.</p>
+                                        <?php }?>
+                                    <?php else: ?>
+                                        <?php if(Security::getInstance()->getUser()['role'] == 'employee') { ?>
+                                            <a href="#" class="btn btn-secondary">Найти вокансию</a>
+                                        <?php } else { ?>
+                                            <a href="#" class="btn btn-secondary" style="padding: 20px 25px;">Разместить вокансию</a>
+                                        <?php }?>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <input class="form-control input-lg" name="password" type="password"
-                                       placeholder="Пароль" required>
-                            </div>
-                            <div class="form-group last">
-                                <input type="submit" class="btn btn-warning btn-block btn-lg" value="Войти">
-                            </div>
-                            <p class="privacy text-center">У Вас нет учетной записи? <a href="/authentication/register">
-                                    Зарегистрироваться</a>.</p>
-                        </form>
+                        <?php endif; ?>
                     </div>
 
                 </div>
@@ -132,12 +155,12 @@
         <div class="row">
 
             <!-- /.intro image -->
-            <div class="col-md-6 intro-pic slideInLeft" >
+            <div class="col-md-6 intro-pic slideInLeft">
                 <img src="/public/images/intro-image.jpg" alt="image" class="img-responsive">
             </div>
 
             <!-- /.intro content -->
-            <div class="col-md-6 slideInRight" >
+            <div class="col-md-6 slideInRight">
                 <h2>Есть зарплата - есть работа!</h2>
 
                 <p>Вакансии радом с домом от проверенных работодателей.
@@ -172,7 +195,7 @@
 
                 <!-- /.feature 1 -->
                 <div class="col-sm-6 feat-list">
-                    <i class="pe-7s-notebook pe-5x pe-va fadeInUp" ></i>
+                    <i class="pe-7s-notebook pe-5x pe-va fadeInUp"></i>
 
                     <div class="inner">
                         <h4>Финансы / Страхование</h4>
@@ -185,7 +208,7 @@
 
                 <!-- /.feature 2 -->
                 <div class="col-sm-6 feat-list">
-                    <i class="pe-7s-wallet fadeInUp" data-wow-delay="0.2s" ></i>
+                    <i class="pe-7s-wallet fadeInUp" data-wow-delay="0.2s"></i>
 
                     <div class="inner">
                         <h4>Офисные службы / Бизнес-услуги</h4>
@@ -199,7 +222,7 @@
 
                 <!-- /.feature 3 -->
                 <div class="col-sm-6 feat-list">
-                    <i class="pe-7s-study fadeInUp" data-wow-delay="0.4s" ></i>
+                    <i class="pe-7s-study fadeInUp" data-wow-delay="0.4s"></i>
 
                     <div class="inner">
                         <h4>Культура / Образование / Госслужба</h4>
@@ -210,7 +233,7 @@
                 </div>
 
                 <div class="col-sm-6 feat-list">
-                    <i class="pe-7s-paint fadeInUp" data-wow-delay="0.4s" ></i>
+                    <i class="pe-7s-paint fadeInUp" data-wow-delay="0.4s"></i>
 
                     <div class="inner">
                         <h4>Строительство / Недвижимость</h4>
@@ -221,7 +244,7 @@
 
                 <!-- /.feature 4 -->
                 <div class="col-sm-6 feat-list">
-                    <i class="pe-7s-users pe-5x pe-va fadeInUp" data-wow-delay="0.6s" ></i>
+                    <i class="pe-7s-users pe-5x pe-va fadeInUp" data-wow-delay="0.6s"></i>
 
                     <div class="inner">
                         <h4>Красота / Здоровье</h4>
@@ -232,7 +255,7 @@
 
                 <!-- /.feature 4 -->
                 <div class="col-sm-6 feat-list">
-                    <i class="pe-7s-culture fadeInUp" data-wow-delay="0.2s" ></i>
+                    <i class="pe-7s-culture fadeInUp" data-wow-delay="0.2s"></i>
 
                     <div class="inner">
                         <h4>Сфера услуг</h4>
@@ -264,11 +287,11 @@
                     <!-- /.download title -->
                     <h2 class="wow fadeInRight">Есть свободная вакансия?</h2>
 
-                    <p class="download-text fadeInLeft" >
+                    <p class="download-text fadeInLeft">
                         тексттексттексттексттексттекттккексттексттексттексттексттексттексттексттекст.</p>
 
                     <!-- /.download button -->
-                    <div class="download-cta fadeInLeft" >
+                    <div class="download-cta fadeInLeft">
                         <a href="vacancy.html" class="btn-secondary">Разместить вакансию</a>
                     </div>
                 </div>
@@ -285,13 +308,13 @@
             <!-- /.pricing title -->
             <h2 class="wow fadeInLeft">Работа и карьера</h2>
 
-            <div class="title-line fadeInRight" ></div>
+            <div class="title-line fadeInRight"></div>
         </div>
         <div class="row package-option">
 
             <!-- /.package 1 -->
             <div class="col-sm-3">
-                <div class="price-box fadeInUp" >
+                <div class="price-box fadeInUp">
                     <div class="price-heading text-center">
                         <!-- /.package icon -->
                         <i class="pe-7s-wallet"></i>
@@ -317,7 +340,7 @@
 
             <!-- /.package 2 -->
             <div class="col-sm-3">
-                <div class="price-box fadeInUp" data-wow-delay="0.2s" >
+                <div class="price-box fadeInUp" data-wow-delay="0.2s">
                     <div class="price-heading text-center">
 
                         <!-- /.package icon -->
@@ -344,7 +367,7 @@
 
             <!-- /.package 3 -->
             <div class="col-sm-3">
-                <div class="price-box fadeInUp" data-wow-delay="0.4s" >
+                <div class="price-box fadeInUp" data-wow-delay="0.4s">
                     <div class="price-heading text-center">
 
                         <!-- /.package icon -->
@@ -369,7 +392,7 @@
 
             <!-- /.package 4 -->
             <div class="col-sm-3">
-                <div class="price-box fadeInUp" data-wow-delay="0.6s" >
+                <div class="price-box fadeInUp" data-wow-delay="0.6s">
                     <div class="price-heading text-center">
 
                         <!-- /.package icon -->
@@ -420,11 +443,11 @@
         <div class="text-center">
             <h2 class="wow fadeInLeft">Делайте первые шаги по карьерной лестнице еще в вузе</h2>
 
-            <div class="title-line fadeInRight" ></div>
+            <div class="title-line fadeInRight"></div>
         </div>
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1">
-                <div id="owl-testi" class="owl-carousel owl-theme fadeInUp" >
+                <div id="owl-testi" class="owl-carousel owl-theme fadeInUp">
 
                     <!-- /.testimonial 1 -->
                     <div class="testi-item">
@@ -490,7 +513,7 @@
                 <div class="row contact-row">
 
                     <!-- /.address and contact -->
-                    <div class="col-sm-5 contact-left fadeInUp" >
+                    <div class="col-sm-5 contact-left fadeInUp">
                         <h2><span class="highlight">Связаться</span> с нами</h2>
                         <ul class="ul-address">
                             <li><i class="pe-7s-map-marker"></i>г.Чита, ул.Баргузинская д.49 офис 305
@@ -525,7 +548,7 @@
                             </div>
                             <div class="form-group">
                                 <input type="submit" name="submit" value="Отправить"
-                                       class="btn btn-success fadeInUp" />
+                                       class="btn btn-success fadeInUp"/>
                             </div>
                         </form>
                     </div>
@@ -551,11 +574,15 @@
                                 class="fa fa-instagram"></i></a></li>
                 </ul>
             </div>
-            <div class="text-center fadeInUp"  style="font-size: 14px;">Агентство трудоустройства <br> 2017</div>
+            <div class="text-center fadeInUp" style="font-size: 14px;">Агентство трудоустройства <br> 2017</div>
             <a href="#" class="scrollToTop"><i class="pe-7s-up-arrow pe-va"></i></a>
         </div>
     </div>
 </footer>
+
+
+<?php include(PROJECT_PATH.'/templates/app/partial/modals.php'); ?>
+
 
 <!-- /.javascript files -->
 <script src="/public/js/jquery.js"></script>
@@ -564,17 +591,27 @@
 <script src="/public/js/jquery.sticky.js"></script>
 <script src="/public/js/wow.min.js"></script>
 <script src="/public/js/owl.carousel.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+        integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+        crossorigin="anonymous"></script>
 <script>
-    $(document).ready(function () {
-        var wow = new WOW({
-            boxClass: 'wow',      // default
-            animateClass: 'animated', // default
-            offset: 0,          // default
-            mobile: true,       // default
-            live: true        // default
+    $(document).ready(function (e) {
+        $('#register-birthday').datepicker({
+            'dateFormat': 'yy-mm-dd',
+            'changeMonth': true,
+            'changeYear': true,
+            'yearRange': "1900:2017"
         });
+    });
+</script>
+<script>
+
+    $(document).ready(function () {
+        var wow = new WOW();
         wow.init();
     });
 </script>
+<script src="/public/js/app/login.js"></script>
+<script src="/public/js/app/register.js"></script>
 </body>
 </html>

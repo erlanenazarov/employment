@@ -713,6 +713,13 @@ a:hover {
 .control-group .controls {
 	overflow-x: hidden;
 }
+
+.form-group::before,
+.form-group::after {
+    content: '';
+    clear: both;
+}
+
 /* iPads (portrait) ----------- */
 @media only screen 
 and (min-width : 768px) 

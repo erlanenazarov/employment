@@ -9,7 +9,7 @@
 class Users extends EntityManager {
 
     function __construct() {
-        $this->applyDataBase();
-        $this->table = 'users';
+        parent::__construct();
+        $this->table = 'Users';
     }
 }

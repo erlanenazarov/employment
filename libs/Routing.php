@@ -63,6 +63,7 @@ class Routing
 //    localhost/{controller name}/{action}
     public function processRoute()
     {
+        Security::getInstance()->checkForUserContains();
         $request_uri = preg_split('/\\//', $_SERVER['REQUEST_URI']);
         $this->controller = !empty($request_uri[1]) ? $request_uri[1] : 'index';
         $this->action     = !empty($request_uri[2]) ? $request_uri[2] : 'index_action';
