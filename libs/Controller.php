@@ -6,11 +6,7 @@
  * Time: 1:50 PM
  */
 
-class Controller {
+abstract class Controller {
 
 
-    public function JsonResponse($value) {
-        header('Content-Type: application/json');
-        echo json_encode($value);
-    }
 }

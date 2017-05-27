@@ -150,3 +150,47 @@
     </div>
 </div>
 
+<?php if(Security::getInstance()->isAuth() && Security::getInstance()->getUser()['role'] == 'employer'): ?>
+    <div class="modal fade" id="create-vacancy-modal" tabindex="-1" role="dialog" aria-labelledby="createVacancy">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="POST" action="/vacancy/create" id="create-vacancy-form">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Добавьте свою вакансию</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="vacancy-title">Название</label>
+                            <input type="text" class="form-control" id="vacancy-title" placeholder="Например: Требуется PHP программист" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vacancy-work-time">График работы</label>
+                            <input type="text" class="form-control" id="vacancy-work-time" placeholder="Например: Полный, частичный" name="work_time" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vacancy-price">Зар. плата</label>
+                            <input type="number" class="form-control" id="vacancy-price" placeholder="Например: 90 000" name="price" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vacancy-category">Категория</label>
+                            <select class="form-control" id="vacancy-category" name="category">
+                                <option value>Выберите из списка</option>
+                                <?php echo($data['vacancy_categories']); ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="vacancy-description">Описание вакансии</label>
+                            <textarea rows="10" id="vacancy-description" name="description" class="form-control" placeholder="Опишите всё что вы хотите от соискателя"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+

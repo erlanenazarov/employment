@@ -9,6 +9,8 @@
 class View {
 
     static function render($templateName, $data=null) {
+        include TEMPLATES_FOLDER.'/partial/header.php';
         include TEMPLATES_FOLDER.$templateName.'.php';
+        include TEMPLATES_FOLDER.'/partial/footer.php';
     }
 }

@@ -7,7 +7,7 @@
  */
 
 
-class authentication {
+class authentication extends AbstractController {
 
 
     public function login()

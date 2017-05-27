@@ -74,10 +74,14 @@ class EntityManager extends CRUD {
         $result = '';
         $index = 0;
         foreach($fields as $key=>$value) {
-            if(is_numeric($value))
-                $result .= $key . '=' . $value;
-            else
-                $result .= $key . '=\'' . $value . '\'';
+            if($value != 'NULL') {
+                if(is_numeric($value))
+                    $result .= $key . '=' . $value;
+                else
+                    $result .= $key . '=\'' . $value . '\'';
+            } else {
+                $result .= $key . ' IS NULL';
+            }
             $index++;
             if($index < sizeof($fields)) $result .= ', ';
         }
@@ -112,5 +116,16 @@ class EntityManager extends CRUD {
         }
 
         return array(mysqli_fetch_assoc($result));
+    }
+
+    function nakedQuery($query) {
+        $result = mysqli_query($this->database->connect(), $query);
+        $n = mysqli_num_rows($result);
+        $data = array();
+        for($i=0; $i < $n; ++$i) {
+            $row = mysqli_fetch_assoc($result);
+            $data[$i] = $row;
+        }
+        return $data;
     }
 }

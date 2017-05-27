@@ -6,7 +6,8 @@
  * Time: 3:45 PM
  */
 
-class index {
+
+class index extends AbstractController {
 
 
     public function index_action() {
@@ -31,7 +32,8 @@ class index {
             'specialities' => $specialityEntity->getObjects('*'),
             'need_to_fill_data' => $needToFillData
         );
-        View::render('indexPage', $data);
+
+        View::render('index.html', array_merge($data, self::generateViewParams()));
     }
 
     public function get_sphere_by_speciality() {
