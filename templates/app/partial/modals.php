@@ -174,15 +174,23 @@
                             <input type="number" class="form-control" id="vacancy-price" placeholder="Например: 90 000" name="price" required>
                         </div>
                         <div class="form-group">
+                            <label for="vacancy-count">Количество свободных мест</label>
+                            <input type="number" class="form-control" id="vacancy-count" placeholder="Например: 2" name="work_place_count" required>
+                        </div>
+                        <div class="form-group">
                             <label for="vacancy-category">Категория</label>
-                            <select class="form-control" id="vacancy-category" name="category">
+                            <select class="form-control" id="vacancy-category" name="category" required="">
                                 <option value>Выберите из списка</option>
                                 <?php echo($data['vacancy_categories']); ?>
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="vacancy-requirements">Требования к соискателю</label>
+                            <textarea rows="7" class="form-control" id="vacancy-requirements" placeholder="Например: Высшее образование" name="requirements" required></textarea>
+                        </div>
+                        <div class="form-group">
                             <label for="vacancy-description">Описание вакансии</label>
-                            <textarea rows="10" id="vacancy-description" name="description" class="form-control" placeholder="Опишите всё что вы хотите от соискателя"></textarea>
+                            <textarea rows="10" id="vacancy-description" name="description" class="form-control" placeholder="Опишите всё что вы хотите от соискателя" required></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

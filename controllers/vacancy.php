@@ -51,10 +51,10 @@ class vacancy extends AbstractController {
 
         $entity = new Jobs();
         $jobs = $entity->nakedQuery($query);
-        foreach($jobs as $item) {
+        for($i=0; $i < sizeof($jobs); ++$i) {
             $c_entity = new Category();
-            $c_title = $c_entity->getObjects('title', array('id' => $item['category']))[0];
-            $item['category'] = $c_title;
+            $c_title = $c_entity->getObjects('title', array('id' => $jobs[$i]['category']))[0];
+            $jobs[$i]['category'] = $c_title['title'];
         }
 
         $count = $entity->nakedQuery('SELECT count(*) FROM vacancy')[0]['count(*)'];
@@ -77,9 +77,12 @@ class vacancy extends AbstractController {
             return ErrorHandler::ConvertError(404);
         }
         $entity = new Jobs();
+        $u_entity = new Users();
         $job = $entity->getObjects('*', array('id' => $id))[0];
+        $userData = $u_entity->getObjects('*', array('id' => $job['user_id']))[0];
         $data = array(
-            'job' => $job
+            'job' => $job,
+            'employer' => $userData
         );
         View::render('vacancy.single.html', array_merge($data, self::generateViewParams()));
     }
@@ -93,16 +96,22 @@ class vacancy extends AbstractController {
                     $price = $_REQUEST['price'];
                     $category = $_REQUEST['category'];
                     $description = $_REQUEST['description'];
+                    $work_place_count = $_REQUEST['work_place_count'];
+                    $requirements = $_REQUEST['requirements'];
                     $created_at = date('Y-m-d');
                     $user_id = Security::getInstance()->getUser()['id'];
 
                     $entity = new Jobs();
                     $result = $entity->insertObjects(
-                        'title, price, description, category, work_time, user_id, created_at',
-                        '\''.$title.'\', \''.$price.'\', \''.$description.'\', \''.$category.'\', \''.$work_time.'\', \''.$user_id.'\', \''.$created_at.'\'');
+                        'title, price, description, requirements, work_place_count, category, work_time, user_id, created_at',
+                        "'$title', '$price', '$description', '$requirements', '$work_place_count', '$category', '$work_time', '$user_id', '$created_at'");
                     if($result) {
                         header('Content-Type: application/json');
-                        echo json_encode(array('success' => true, 'message' => 'Вы успешно создали вакансию!'));
+                        echo json_encode(array(
+                            'success' => true,
+                            'message' => 'Вы успешно создали вакансию!',
+                            'url' => '/vacancy/single/?id='.mysqli_insert_id($entity->database->connect())
+                        ));
                         return;
                     } else {
                         header('Content-Type: application/json');
@@ -120,5 +129,53 @@ class vacancy extends AbstractController {
         }
         header('Content-Type: application/json');
         echo json_encode(array('success' => false, 'message' => 'Отправлен GET запрос'));
+    }
+
+
+    public function edit() {
+        $id = isset($_GET['id']) ? $_GET['id'] : '';
+
+        if($id == '') {
+            return ErrorHandler::ConvertError(404);
+        }
+
+        $v_entity = new Jobs();
+        $u_entity = new Users();
+        $job = $v_entity->getObjects('*', array('id' => $id))[0];
+        $userData = $u_entity->getObjects('*', array('id' => $job['user_id']))[0];
+        $data = array(
+            'job' => $job,
+            'employer' => $userData
+        );
+        if(!Security::getInstance()->isAuth() || !Security::getInstance()->getUser()['id'] == $job['user_id']) {
+            return ErrorHandler::ConvertError(401);
+        }
+
+        if(Routing::getInstance()->isMethod('POST')) {
+            $title = $_REQUEST['title'];
+            $price = $_REQUEST['price'];
+            $work_time = $_REQUEST['work_time'];
+            $description = $_REQUEST['description'];
+            $requirements = $_REQUEST['requirements'];
+            $work_place_count = $_REQUEST['work_place_count'];
+            $updated_at = date('Y-m-d');
+
+            $v_entity->updateObject(array(
+                'title' => $title,
+                'price' => $price,
+                'work_time' => $work_time,
+                'description' => $description,
+                'created_at' => $updated_at,
+                'requirements' => $requirements,
+                'work_place_count' => $work_place_count
+            ), array(
+                'id' => $job['id']
+            ));
+            if($v_entity) {
+                $data['message'] = 'Информация успешно обновлена!';
+            }
+        }
+
+        View::render('vacancy.edit.html', $data);
     }
 }

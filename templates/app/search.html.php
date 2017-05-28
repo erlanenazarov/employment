@@ -41,7 +41,7 @@
                     <?php foreach($data['jobs'] as $item): ?>
                         <tr>
                             <td><?php echo($item['id']); ?></td>
-                            <td><a href="#"><?php echo($item['Title']); ?></a></td>
+                            <td><a href="/vacancy/single/?id=<?php echo($item['id']); ?>"><?php echo($item['title']); ?></a></td>
                             <td><?php echo($item['price']); ?></td>
                             <td><?php echo($item['category']); ?></td>
                             <td><?php echo($item['created_at']); ?></td>

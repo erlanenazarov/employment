@@ -35,7 +35,6 @@ class Routing
     public function __construct()
     {
         session_start();
-        ini_set('zend.enable_gc', true);
         $this->base_url = isset($_SERVER['HTTPS']) ? 'https' : 'http' . "://" . $_SERVER['HTTP_HOST'] . '/';
         $tmp = explode('/', $_SERVER['REQUEST_URI']);
         $this->base_url .= $tmp[1];
@@ -69,17 +68,17 @@ class Routing
         $this->action     = !empty($request_uri[2]) ? $request_uri[2] : 'index_action';
 
         if (!file_exists(CONTROLLERS_PATH . $this->controller . '.php')) {
-            return ErrorHandler::ConvertError(101);
+            return ErrorHandler::ConvertError(404);
         }
         require_once CONTROLLERS_PATH . $this->controller . '.php';
 
         if (!class_exists($this->controller)) {
-            return ErrorHandler::ConvertError(102);
+            return ErrorHandler::ConvertError(404);
         }
         $controllerClass = new $this->controller();
 
         if (!method_exists($controllerClass, $this->action)) {
-            return ErrorHandler::ConvertError(102);
+            return ErrorHandler::ConvertError(404);
         }
         $this->cleanupRequest();
 

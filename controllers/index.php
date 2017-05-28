@@ -55,4 +55,45 @@ class index extends AbstractController {
         header('Content-Type: application/json');
         echo json_encode(array('success' => false, 'message' => 'Отправлен GET запрос'));
     }
+
+    public function feedback() {
+        if(Routing::getInstance()->isMethod('POST')) {
+            $name = $_REQUEST['name'];
+            $email = $_REQUEST['email'];
+            $text = $_REQUEST['text'];
+
+            $entity = new Feedback();
+            $result = $entity->insertObjects('name, email, text', "'$name', '$email', '$text'");
+            if($result) {
+                $body = '<b>Имя</b>: '.$name.' <br>';
+                $body .= '<b>Почта</b>: '.$email.' <br>';
+                $body .= '<b>Текст сообщения</b>: <br>';
+                $body .= $text;
+                $mail = new PHPMailer();
+                $mail->isSMTP();
+                $mail->CharSet = 'UTF-8';
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'okay11007@gmail.com';
+                $mail->Password = 'Afrodita97';
+                $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+                $mail->Port = 587;                                    // TCP port to connect to
+                $mail->setFrom('admin@employment_agency;', 'Агенство вокансий 2017');
+                $mail->addAddress($email);
+                $mail->isHTML(true);                                  // Set email format to HTML
+                $mail->Subject = 'Обратная связь с Employment Agency';
+                $mail->Body    = $body;
+                $mail->send();
+                header('Content-Type: application/json');
+                echo json_encode(array('success' => true, 'message' => 'Запрос успешно отправлен'));
+                return;
+            } else {
+                header('Content-Type: application/json');
+                echo json_encode(array('success' => false, 'message' => 'Произошла ошибка при попытке отправки обратной связи, попробуйте позже'));
+                return;
+            }
+        }
+        header('Content-Type: application/json');
+        echo json_encode(array('success' => false, 'message' => 'Отправлен GET запрос'));
+    }
 }

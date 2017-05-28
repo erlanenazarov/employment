@@ -8,8 +8,10 @@
 
 class ErrorHandler {
     public static function ConvertError($error_code) {
-        $error_description = "";
-        echo($error_code);
-        return json_encode(array('error_code' => $error_code, 'description' => $error_description));
+        $data = array(
+            'error_code' => $error_code
+        );
+        View::render('404', array($data, AbstractController::generateViewParams()));
+        return 1;
     }
 }

@@ -42,6 +42,25 @@
             padding-bottom: 20px;
             padding-right: 10px;
         }
+
+        ul.bread-crumbs {
+            padding-left: 0;
+        }
+
+        ul.bread-crumbs li {
+            list-style: none;
+            display: inline-block;
+            margin-right: 15px;
+            vertical-align: top;
+        }
+
+        ul.bread-crumbs li a {
+            font-size: 12px;
+        }
+
+        ul.bread-crumbs li span {
+            margin-left: 12px;
+        }
     </style>
 </head>
 

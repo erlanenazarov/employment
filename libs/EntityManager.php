@@ -9,7 +9,7 @@
 class EntityManager extends CRUD {
 
     public $table = '';
-    private $database = null;
+    public $database = null;
 
 
     public function __construct() {
