@@ -9,46 +9,43 @@
 class vacancy extends AbstractController {
 
     public function search() {
-        $page = isset($_GET['page']) ? $_GET['page'] : 0;
+        header ('Content-type: text/html; charset=utf-8');
         $title = isset($_GET['title']) ? $_GET['title'] : '';
         $price = isset($_GET['price']) ? $_GET['price'] : '';
         $category = isset($_GET['category']) ? $_GET['category'] : '';
-        //var_dump($title, $price, $category);
         $query = 'SELECT * FROM vacancy';
         if($title != '') {
             $tmp_title = explode(' ', $title);
             $new_title = '';
             if(sizeof($tmp_title) > 0) {
                 foreach($tmp_title as $item) {
-                    $new_title .= ' %'.strtolower($item).'% ';
+                    $new_title .= '%'.mb_strtolower($item, 'utf8').'%';
                 }
             } else {
-                $new_title = '%'.$title.'%';
+                $new_title = '%'.mb_strtolower($title, 'utf8').'%';
             }
-            $query .= ' WHERE title LIKE \''.$new_title.'\'';
+            $query .= ' WHERE LOWER(title) LIKE \''.$new_title.'\'';
         }
 
         if($price != '') {
             if($title != '')
-                $query .= ',';
+                $query .= ' and';
             else
                 $query .= ' WHERE';
             $query .= ' price >= '.$price;
         }
 
         if($category != '') {
-            if($price != '' && $title != '')
-                $query .= ',';
+            if($price != '' || $title != '')
+                $query .= ' and';
             elseif($title == '' && $price == '')
                 $query .= ' WHERE';
 
             $query .= ' category = '.$category;
         }
 
-        $per_page = 20;
-        $start = abs($page*$per_page);
-        $query .= " LIMIT $start,$per_page";
-
+        $query .= " ORDER BY id DESC";
+		
         $entity = new Jobs();
         $jobs = $entity->nakedQuery($query);
         for($i=0; $i < sizeof($jobs); ++$i) {
@@ -57,16 +54,8 @@ class vacancy extends AbstractController {
             $jobs[$i]['category'] = $c_title['title'];
         }
 
-        $count = $entity->nakedQuery('SELECT count(*) FROM vacancy')[0]['count(*)'];
-        if($count > 0) {
-            $num_pages = ceil($count/$per_page);
-        } else {
-            $num_pages = array();
-        }
-
         $data = array(
             'jobs' => $jobs,
-            'num_pages' => $num_pages
         );
         View::render('search.html', array_merge($data, self::generateViewParams()));
     }

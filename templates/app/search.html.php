@@ -54,11 +54,6 @@
                 <?php endif; ?>
                 </tbody>
             </table>
-            <ul class="pagination">
-                <?php foreach($data['num_pages'] as $page): ?>
-                    <li <?php if($page == $_GET['page']): ?>class="active"<?php endif; ?>><a href="?page=<?php echo($page); ?>"><?php echo($page); ?></a></li>
-                <?php endforeach; ?>
-            </ul>
         </div>
     </div>
 </div>
